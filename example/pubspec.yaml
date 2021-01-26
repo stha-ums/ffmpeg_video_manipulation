@@ -1,0 +1,27 @@
+name: example
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+publish_to: none
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audio_video_trimmer:
+    path: ../
+
+  cupertino_icons: ^0.1.2
+  image_picker: ^0.6.7+17
+  video_player: ^1.0.1
+  file_picker: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
