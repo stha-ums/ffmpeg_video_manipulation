@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:audio_video_trimmer/src/audio_playback_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 import 'trim_editor_painter.dart';
 import 'trimmer.dart';
-
 
 class TrimEditorAudio extends StatefulWidget {
   /// For defining the total trimmer area width
@@ -214,7 +214,8 @@ class TrimEditorAudio extends StatefulWidget {
   _TrimEditorState createState() => _TrimEditorState();
 }
 
-class _TrimEditorState extends State<TrimEditorAudio> with TickerProviderStateMixin {
+class _TrimEditorState extends State<TrimEditorAudio>
+    with TickerProviderStateMixin {
   File _audioFile;
 
   double _audioStartPos = 0.0;
@@ -252,7 +253,7 @@ class _TrimEditorState extends State<TrimEditorAudio> with TickerProviderStateMi
   AudioPlayer _audioPlayer;
 
   Future<void> _initializeaudioController() async {
-    Function audioListner = () {
+    Function audioListner = () async {
       final bool isPlaying = _audioPlayer.state == AudioPlayerState.PLAYING;
       print("audio playing: $isPlaying");
       if (isPlaying) {
@@ -298,8 +299,14 @@ class _TrimEditorState extends State<TrimEditorAudio> with TickerProviderStateMi
               // _animationController.forward();
             }
             _animationController.forward();
-            videPlaybackControl(
-                startValue: _audioStartPos, endValue: _audioEndPos);
+            Trimmer.currentPlayerPosition = Trimmer.currentPlayerPosition ??
+                await _audioPlayer.getCurrentPosition();
+            audioPlaybackControl(
+                startValue: _audioStartPos,
+                endValue: _audioEndPos,
+                currentPositionInMilliSeconds:
+                    Trimmer.currentPlayerPosition.inMilliseconds,
+                audioPlayer: _audioPlayer);
 
             // if (widget.onChangePlaybackState != null)
             // widget.onChangePlaybackState(false);
@@ -335,28 +342,6 @@ class _TrimEditorState extends State<TrimEditorAudio> with TickerProviderStateMi
       //   quality: widget.thumbnailQuality,
       // );
       // thumbnailWidget = _thumbnailWidget;
-    }
-  }
-
-  Future<bool> videPlaybackControl({
-    @required double startValue,
-    @required double endValue,
-  }) async {
-    if (_audioPlayer.state == AudioPlayerState.PLAYING) {
-      await _audioPlayer.pause();
-      return false;
-    } else {
-      Trimmer.currentPlayerPosition = Trimmer.currentPlayerPosition ??
-          await _audioPlayer.getCurrentPosition();
-
-      if (Trimmer.currentPlayerPosition.inMilliseconds >= endValue.toInt()) {
-        await _audioPlayer.seek(Duration(milliseconds: startValue.toInt()));
-        await _audioPlayer.resume();
-        return true;
-      } else {
-        await _audioPlayer.resume();
-        return true;
-      }
     }
   }
 

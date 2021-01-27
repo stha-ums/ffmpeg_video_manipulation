@@ -12,3 +12,5 @@ export 'package:audio_video_trimmer/src/trim_editor_video.dart';
 
 export 'package:audio_video_trimmer/src/text_on_video.dart';
 export 'package:audio_video_trimmer/src/draw_text_color.dart';
+export 'src/videoPlayBackController.dart';
+export 'src/audio_playback_controller.dart';

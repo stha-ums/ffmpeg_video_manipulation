@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audio_video_trimmer/src/videoPlayBackController.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audio_video_trimmer/src/thumbnail_viewer.dart';
@@ -296,8 +297,8 @@ class _TrimEditorState extends State<TrimEditorVideo> with TickerProviderStateMi
                 // _animationController.forward();
               }
               _animationController.forward();
-              videPlaybackControl(
-                  startValue: _videoStartPos, endValue: _videoEndPos);
+              videoPlaybackControl(
+                  startValue: _videoStartPos, endValue: _videoEndPos,videoPlayerController: _videoPlayerController );
 
               // if (widget.onChangePlaybackState != null)
               // widget.onChangePlaybackState(false);
@@ -328,26 +329,6 @@ class _TrimEditorState extends State<TrimEditorVideo> with TickerProviderStateMi
     }
   }
 
-  Future<bool> videPlaybackControl({
-    @required double startValue,
-    @required double endValue,
-  }) async {
-    if (_videoPlayerController.value.isPlaying) {
-      await _videoPlayerController.pause();
-      return false;
-    } else {
-      if (_videoPlayerController.value.position.inMilliseconds >=
-          endValue.toInt()) {
-        await _videoPlayerController
-            .seekTo(Duration(milliseconds: startValue.toInt()));
-        await _videoPlayerController.play();
-        return true;
-      } else {
-        await _videoPlayerController.play();
-        return true;
-      }
-    }
-  }
 
   void _setVideoStartPosition(DragUpdateDetails details) async {
     if (!(_startPos.dx + details.delta.dx < 0) &&
